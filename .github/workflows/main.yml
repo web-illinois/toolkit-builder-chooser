@@ -1,0 +1,24 @@
+name: deploy_release
+on:
+  push:
+    branches: [ 'main' ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Get Version
+      id: get_version
+      uses: battila7/get-version-action@v2
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: 'AKIAXNR47MADGK2A4HEW'
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_FOR_AKIAXNR47MADGK2A4HEW }}
+        aws-region: us-east-2
+
+    - name: Deploy examples to S3 bucket 
+      run: aws s3 sync index.html s3://builder.toolkit.illinois.edu/content --delete --acl bucket-owner-full-control
+    - name: Invalidate Cloudfront cache for 
+      run: aws cloudfront create-invalidation --distribution-id	E15SV48NKMOQKH --paths "/*"
