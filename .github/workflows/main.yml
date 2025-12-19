@@ -19,6 +19,6 @@ jobs:
         aws-region: us-east-2
 
     - name: Deploy examples to S3 bucket 
-      run: aws s3 sync index.html s3://builder.toolkit.illinois.edu/content --delete --acl bucket-owner-full-control
+      run: aws s3 sync . s3://builder.toolkit.illinois.edu/content --delete --acl bucket-owner-full-control
     - name: Invalidate Cloudfront cache for 
       run: aws cloudfront create-invalidation --distribution-id	E15SV48NKMOQKH --paths "/*"
